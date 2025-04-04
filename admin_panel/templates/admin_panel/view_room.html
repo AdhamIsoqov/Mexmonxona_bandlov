@@ -1,0 +1,157 @@
+{% load static %}
+{% include 'admin_panel/assets/head.html' %}
+{% include 'admin_panel/assets/navbar.html' %}
+
+<div class="content">
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title">Xona ma'lumotlari</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="{% url 'dashboard' %}">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'add_room' %}">Xonalar</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Xona ma'lumotlari</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Xona ma'lumotlari</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Xona raqami</label>
+                                    <p class="form-control-static">{{ room.room_number }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Xona turi</label>
+                                    <p class="form-control-static">
+                                        {% if room.room_type == 'ST' %}
+                                        Standart
+                                        {% elif room.room_type == 'CF' %}
+                                        Komfort
+                                        {% else %}
+                                        Lyuks
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Narxi</label>
+                                    <p class="form-control-static">${{ room.price }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Karavotlar soni</label>
+                                    <p class="form-control-static">{{ room.beds }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Sig'imi (kishi)</label>
+                                    <p class="form-control-static">{{ room.capacity }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Qavat</label>
+                                    <p class="form-control-static">{{ room.floor }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Holati</label>
+                                    <p class="form-control-static">
+                                        {% if room.is_available %}
+                                        <span class="badge badge-success">Bo'sh</span>
+                                        {% else %}
+                                        <span class="badge badge-danger">Band</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Tavsifi</label>
+                                    <p class="form-control-static">{{ room.description|default:"Tavsif kiritilmagan" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Xona imkoniyatlari</label>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_breakfast %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Nonushta kiritilgan
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_wifi %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Wi-Fi mavjud
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_tv %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Televizor mavjud
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_ac %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Konditsioner mavjud
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_minibar %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Mini-bar mavjud
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_safe %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Seif mavjud
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="form-control-static">
+                                                <i class="fas {% if room.has_bathroom %}fa-check text-success{% else %}fa-times text-danger{% endif %}"></i>
+                                                Hammom mavjud
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-action mt-4">
+                            <a href="{% url 'add_room' %}" class="btn btn-primary">Orqaga</a>
+                            <a href="{% url 'update_room' room.id %}" class="btn btn-success">Tahrirlash</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'admin_panel/assets/footer.html' %} 

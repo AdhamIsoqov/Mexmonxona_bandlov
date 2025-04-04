@@ -1,0 +1,258 @@
+{% load static %}
+{% include 'admin_panel/assets/head.html' %}
+{% include 'admin_panel/assets/navbar.html' %}
+
+<div class="content">
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title">{% if room %}Xona ma'lumotlarini yangilash{% else %}Yangi xona qo'shish{% endif %}</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="{% url 'dashboard' %}">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Xonalar</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">{% if room %}Xona yangilash{% else %}Yangi xona{% endif %}</a>
+                </li>
+            </ul>
+        </div>
+
+        {% if messages %}
+        <div class="row">
+            <div class="col-md-12">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    <div class="alert-icon">
+                        {% if message.tags == 'success' %}
+                        <i class="fas fa-check"></i>
+                        {% elif message.tags == 'danger' %}
+                        <i class="fas fa-times"></i>
+                        {% elif message.tags == 'warning' %}
+                        <i class="fas fa-exclamation"></i>
+                        {% else %}
+                        <i class="fas fa-info"></i>
+                        {% endif %}
+                    </div>
+                    <div class="alert-message">
+                        <strong>{{ message }}</strong>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Xona ma'lumotlarini kiriting</div>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" id="roomForm">
+                            {% csrf_token %}
+                            <input type="hidden" name="room_id" id="room_id" value="{{ room.id|default:'' }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Xona raqami</label>
+                                        <input type="text" class="form-control" name="room_number" id="room_number" value="{{ room.room_number|default:room_number|default:'' }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Xona turi</label>
+                                        <select class="form-select" name="room_type" id="room_type" required>
+                                            <option value="ST" {% if room.room_type == 'ST' or room_type == 'ST' %}selected{% endif %}>Standart</option>
+                                            <option value="CF" {% if room.room_type == 'CF' or room_type == 'CF' %}selected{% endif %}>Komfort</option>
+                                            <option value="LX" {% if room.room_type == 'LX' or room_type == 'LX' %}selected{% endif %}>Lyuks</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Narxi</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" name="price" id="price" step="0.01" value="{{ room.price|default:price|default:'' }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Karavotlar soni</label>
+                                        <input type="number" class="form-control" name="beds" id="beds" min="1" value="{{ room.beds|default:beds|default:'' }}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Sig'imi (kishi)</label>
+                                        <input type="number" class="form-control" name="capacity" id="capacity" min="1" value="{{ room.capacity|default:capacity|default:'' }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Qavat</label>
+                                        <input type="number" class="form-control" name="floor" id="floor" min="1" value="{{ room.floor|default:floor|default:'' }}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Tavsifi</label>
+                                        <textarea class="form-control" name="description" id="description" rows="3">{{ room.description|default:description|default:'' }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Xona imkoniyatlari</label>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_breakfast" id="has_breakfast" {% if room.has_breakfast or has_breakfast %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_breakfast">Nonushta kiritilgan</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_wifi" id="has_wifi" {% if room.has_wifi or has_wifi %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_wifi">Wi-Fi mavjud</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_tv" id="has_tv" {% if room.has_tv or has_tv %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_tv">Televizor mavjud</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_ac" id="has_ac" {% if room.has_ac or has_ac %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_ac">Konditsioner mavjud</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_minibar" id="has_minibar" {% if room.has_minibar or has_minibar %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_minibar">Mini-bar mavjud</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_safe" id="has_safe" {% if room.has_safe or has_safe %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_safe">Seif mavjud</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="has_bathroom" id="has_bathroom" {% if room.has_bathroom or has_bathroom %}checked{% endif %}>
+                                                    <label class="form-check-label" for="has_bathroom">Hammom mavjud</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-action mt-4">
+                                <button type="submit" class="btn btn-icon btn-round btn-success" title="{% if room %}Yangilash{% else %}Saqlash{% endif %}">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <a href="{% url 'dashboard' %}" class="btn btn-icon btn-round btn-danger" title="Bekor qilish">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Xonalar ro'yxati</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Xona</th>
+                                        <th>Turi</th>
+                                        <th>Holati</th>
+                                        <th>Amallar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for room in rooms|slice:":10" %}
+                                    <tr>
+                                        <td>{{ room.room_number }}</td>
+                                        <td>
+                                            {% if room.room_type == 'ST' %}
+                                            Standart
+                                            {% elif room.room_type == 'CF' %}
+                                            Komfort
+                                            {% else %}
+                                            Lyuks
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if room.is_available %}
+                                            <span class="badge badge-success">Bo'sh</span>
+                                            {% else %}
+                                            <span class="badge badge-danger">Band</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-icon btn-round btn-primary edit-room" data-room-id="{{ room.id }}" title="Tahrirlash">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room" data-room-id="{{ room.id }}" title="O'chirish">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if rooms.count > 10 %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-primary">Barcha xonalarni ko'rish</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'assets_admin/js/room_management.js' %}"></script>
+
+{% include 'admin_panel/assets/footer.html' %}

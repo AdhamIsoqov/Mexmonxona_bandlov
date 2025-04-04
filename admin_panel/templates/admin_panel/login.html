@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Kirish</title>
+    <link rel="icon" href="{% static 'assets_admin/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
+    
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets_admin/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["{% static 'assets_admin/css/fonts.min.css' %}"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets_admin/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets_admin/css/plugins.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets_admin/css/kaiadmin.min.css' %}" />
+    <style>
+        body {
+            background-color: #f4f6f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-logo img {
+            height: 50px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background: transparent;
+            border-bottom: none;
+            padding: 1.5rem 1.5rem 0;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 0.75rem 1rem;
+        }
+        .btn-login {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+        .alert {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="{% static 'assets_admin/img/kaiadmin/logo_light.svg' %}" alt="Logo">
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center mb-0">Admin Panelga kirish</h4>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">Foydalanuvchi nomi</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Parol</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block btn-login">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Kirish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core JS Files -->
+    <script src="{% static 'assets_admin/js/core/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets_admin/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets_admin/js/core/bootstrap.min.js' %}"></script>
+</body>
+</html> 
