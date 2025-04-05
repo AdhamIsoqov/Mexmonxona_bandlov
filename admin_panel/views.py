@@ -303,30 +303,20 @@ def view_room(request, room_id):
         return redirect('add_room')
 
 @login_required
-def delete_room(request, room_id):
+def delete_room(request):
     if request.method == 'POST':
+        room_id = request.POST.get('room_id')
         try:
             room = Room.objects.get(id=room_id)
             room_number = room.room_number
             room.delete()
-            return JsonResponse({
-                'success': True,
-                'message': f'{room_number} raqamli xona muvaffaqiyatli o\'chirildi'
-            })
+            messages.success(request, f'{room_number} raqamli xona muvaffaqiyatli o\'chirildi')
         except Room.DoesNotExist:
-            return JsonResponse({
-                'success': False,
-                'message': 'Xona topilmadi'
-            }, status=404)
+            messages.error(request, 'Xona topilmadi')
         except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'message': f'Xatolik yuz berdi: {str(e)}'
-            }, status=500)
-    return JsonResponse({
-        'success': False,
-        'message': 'Noto\'g\'ri so\'rov'
-    }, status=400)
+            messages.error(request, f'Xatolik yuz berdi: {str(e)}')
+    
+    return redirect('add_room')
 
 @login_required
 def get_rooms(request):

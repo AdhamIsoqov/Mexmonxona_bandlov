@@ -62,7 +62,7 @@
                         <div class="card-title">Xona ma'lumotlarini kiriting</div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" id="roomForm">
+                        <form method="POST" id="roomForm add-room-form">
                             {% csrf_token %}
                             <input type="hidden" name="room_id" id="room_id" value="{{ room.id|default:'' }}">
                             <div class="row">
@@ -189,69 +189,228 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Xonalar ro'yxati</div>
+                        <div class="card-category">Barcha xonalar</div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-striped mt-3">
                                 <thead>
                                     <tr>
-                                        <th>Xona</th>
-                                        <th>Turi</th>
+                                        <th>Xona raqami</th>
+                                        <th>Xona turi</th>
+                                        <th>Narxi</th>
+                                        <th>Karavotlar soni</th>
+                                        <th>Sig'imi</th>
+                                        <th>Qavat</th>
                                         <th>Holati</th>
                                         <th>Amallar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for room in rooms|slice:":10" %}
+        
                                     <tr>
-                                        <td>{{ room.room_number }}</td>
+                                        <td>101</td>
+                                        <td>Komfort</td>
+                                        <td>$120.00</td>
+                                        <td>3</td>
+                                        <td>1</td>
+                                        <td>1</td>
                                         <td>
-                                            {% if room.room_type == 'ST' %}
-                                            Standart
-                                            {% elif room.room_type == 'CF' %}
-                                            Komfort
-                                            {% else %}
-                                            Lyuks
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if room.is_available %}
-                                            <span class="badge badge-success">Bo'sh</span>
-                                            {% else %}
-                                            <span class="badge badge-danger">Band</span>
-                                            {% endif %}
+        
+                                            <span class="badge badge-success">Mavjud</span>
+        
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-icon btn-round btn-primary edit-room" data-room-id="{{ room.id }}" title="Tahrirlash">
+                                                <a href="/panel/view-room/{{ room.id }}/" class="btn btn-icon btn-round btn-info me-2" title="Ko'rish">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/panel/update-room/{{ room.id }}/" class="btn btn-icon btn-round btn-primary me-2" title="Tahrirlash">
                                                     <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room" data-room-id="{{ room.id }}" title="O'chirish">
+                                                </a>
+                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room" data-room-id="{{ room.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ room.id }}" title="O'chirish">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    {% endfor %}
+        
+                                    <tr>
+                                        <td>102</td>
+                                        <td>Standart</td>
+                                        <td>$120.00</td>
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                        <td>
+        
+                                            <span class="badge badge-success">Mavjud</span>
+        
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/panel/view-room/2/" class="btn btn-icon btn-round btn-info me-2"
+                                                    title="Ko'rish">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/panel/update-room/2/" class="btn btn-icon btn-round btn-primary me-2"
+                                                    title="Tahrirlash">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room"
+                                                    data-room-id="2" title="O'chirish">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+        
+                                    <tr>
+                                        <td>103</td>
+                                        <td>Standart</td>
+                                        <td>$100.00</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>
+        
+                                            <span class="badge badge-success">Mavjud</span>
+        
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/panel/view-room/3/" class="btn btn-icon btn-round btn-info me-2"
+                                                    title="Ko'rish">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/panel/update-room/3/" class="btn btn-icon btn-round btn-primary me-2"
+                                                    title="Tahrirlash">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room"
+                                                    data-room-id="3" title="O'chirish">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+        
+                                    <tr>
+                                        <td>104</td>
+                                        <td>Standart</td>
+                                        <td>$100.00</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>
+        
+                                            <span class="badge badge-success">Mavjud</span>
+        
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/panel/view-room/4/" class="btn btn-icon btn-round btn-info me-2"
+                                                    title="Ko'rish">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/panel/update-room/4/" class="btn btn-icon btn-round btn-primary me-2"
+                                                    title="Tahrirlash">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room"
+                                                    data-room-id="4" title="O'chirish">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+        
+                                    <tr>
+                                        <td>1266t67</td>
+                                        <td>Komfort</td>
+                                        <td>$1.00</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>
+        
+                                            <span class="badge badge-success">Mavjud</span>
+        
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/panel/view-room/6/" class="btn btn-icon btn-round btn-info me-2"
+                                                    title="Ko'rish">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/panel/update-room/6/" class="btn btn-icon btn-round btn-primary me-2"
+                                                    title="Tahrirlash">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-icon btn-round btn-danger delete-room"
+                                                    data-room-id="6" title="O'chirish">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+        
                                 </tbody>
                             </table>
                         </div>
-                        {% if rooms.count > 10 %}
-                        <div class="text-center mt-3">
-                            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-primary">Barcha xonalarni ko'rish</a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal{{ room.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ room.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ room.id }}">Xonani o'chirish</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Haqiqatan ham {{ room.room_number }} raqamli xonani o'chirmoqchimisiz?</p>
+                <p class="text-danger">Bu amalni qaytarib bo'lmaydi!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                <form method="POST" action="/panel/delete-room/">
+                    {% csrf_token %}
+                    <input type="hidden" name="room_id" value="{{ room.id }}">
+                    <button type="submit" class="btn btn-danger">O'chirish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Delete room modal handler
+    const deleteButtons = document.querySelectorAll('.delete-room');
+    const deleteForm = document.getElementById('deleteForm');
+    const deleteRoomId = document.getElementById('deleteRoomId');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const roomId = this.getAttribute('data-room-id');
+            deleteRoomId.value = roomId;
+        });
+    });
+});
+</script>
 
 <script src="{% static 'assets_admin/js/room_management.js' %}"></script>
 

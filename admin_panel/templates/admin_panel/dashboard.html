@@ -447,9 +447,17 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <a href="{% url 'update_room' room.id %}" class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-edit"></i> Yangilash
-                                                </a>
+                                                <div class="btn-group">
+                                                    <a href="/panel/view-room/{{ room.id }}/" class="btn btn-icon btn-round btn-info me-2" title="Ko'rish">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="/panel/update-room/{{ room.id }}/" class="btn btn-icon btn-round btn-primary me-2" title="Tahrirlash">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-icon btn-round btn-danger delete-room" data-room-id="{{ room.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="O'chirish">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                         {% empty %}
