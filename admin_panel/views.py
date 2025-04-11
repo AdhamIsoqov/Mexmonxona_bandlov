@@ -24,10 +24,12 @@ def login_view(request):
     
     return render(request, 'admin_panel/login.html')
 
+@login_required(login_url='login')
 def logout_view(request):
     logout(request)
     return redirect('login')
 
+@login_required(login_url='login')
 def dashboard(request):
     rooms = Room.objects.all()
     total_rooms = rooms.count()
@@ -43,9 +45,11 @@ def dashboard(request):
         'total_income': total_income
     })
 
+@login_required(login_url='login')
 def add_hotel(request):
-  return render(request, 'admin_panel/add_hotel.html')
+    return render(request, 'admin_panel/add_hotel.html')
 
+@login_required(login_url='login')
 def add_room(request):
     if request.method == 'POST':
         try:
@@ -163,6 +167,7 @@ def add_room(request):
         'rooms': Room.objects.all().order_by('-id')
     })
 
+@login_required(login_url='login')
 def update_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
     
@@ -284,6 +289,7 @@ def update_room(request, room_id):
         'rooms': Room.objects.all().order_by('-id')
     })
 
+@login_required(login_url='login')
 def get_room(request, room_id):
     try:
         room = Room.objects.get(id=room_id)
@@ -293,7 +299,7 @@ def get_room(request, room_id):
     except Room.DoesNotExist:
         return JsonResponse({'error': 'Xona topilmadi'}, status=404)
 
-@login_required
+@login_required(login_url='login')
 def view_room(request, room_id):
     try:
         room = Room.objects.get(id=room_id)
@@ -302,23 +308,33 @@ def view_room(request, room_id):
         messages.error(request, 'Xona topilmadi')
         return redirect('add_room')
 
-@login_required
-def delete_room(request):
+@login_required(login_url='login')
+def delete_room(request, room_id):
     if request.method == 'POST':
-        room_id = request.POST.get('room_id')
         try:
             room = Room.objects.get(id=room_id)
             room_number = room.room_number
             room.delete()
-            messages.success(request, f'{room_number} raqamli xona muvaffaqiyatli o\'chirildi')
+            return JsonResponse({
+                'success': True,
+                'message': f'{room_number} raqamli xona muvaffaqiyatli o\'chirildi'
+            })
         except Room.DoesNotExist:
-            messages.error(request, 'Xona topilmadi')
+            return JsonResponse({
+                'success': False,
+                'message': 'Xona topilmadi'
+            }, status=404)
         except Exception as e:
-            messages.error(request, f'Xatolik yuz berdi: {str(e)}')
-    
-    return redirect('add_room')
+            return JsonResponse({
+                'success': False,
+                'message': f'Xatolik yuz berdi: {str(e)}'
+            }, status=500)
+    return JsonResponse({
+        'success': False,
+        'message': 'Noto\'g\'ri so\'rov'
+    }, status=400)
 
-@login_required
+@login_required(login_url='login')
 def get_rooms(request):
     try:
         rooms = Room.objects.all().order_by('room_number')

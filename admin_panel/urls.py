@@ -11,5 +11,5 @@ urlpatterns = [
     path('get-room/<int:room_id>/', views.get_room, name='get_room'),
     path('get-rooms/', views.get_rooms, name='get_rooms'),
     path('view-room/<int:room_id>/', views.view_room, name='view_room'),
-    path('delete-room/', views.delete_room, name='delete_room'),
+    path('delete-room/<int:room_id>/', views.delete_room, name='delete_room'),
 ]

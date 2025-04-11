@@ -36,13 +36,13 @@
               <h4 class="text-section">Boshqaruv</h4>
             </li>
             <li class="nav-item">
-              <a href="{% url 'add_room' %}#add-room-form">
+              <a href="{% url 'add_room' %}">
                 <i class="fas fa-hotel"></i>
                 <p>Xona qo'shish</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'add_room' %}#room-table">
+              <a href="{% url 'add_room' %}">
                 <i class="fas fa-list"></i>
                 <p>Xonalar ro'yxati</p>
               </a>
@@ -106,7 +106,7 @@
                   </div>
                   <span class="profile-username">
                     <span class="op-7">Salom,</span>
-                    <span class="fw-bold">Admin</span>
+                    <span class="fw-bold">{{ request.user.username }}</span>
                   </span>
                 </a>
                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -117,8 +117,8 @@
                           <img src="{% static 'assets_admin/img/profile.jpg' %}" alt="image profile" class="avatar-img rounded" />
                         </div>
                         <div class="u-text">
-                          <h4>Admin</h4>
-                          <p class="text-muted">admin@example.com</p>
+                          <h4>{{ request.user.username }}</h4>
+                          <p class="text-muted">{{ request.user.email }}</p>
                           <a href="{% url 'dashboard' %}" class="btn btn-xs btn-secondary btn-sm">Profil</a>
                         </div>
                       </div>
