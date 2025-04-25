@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section Begin -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="hero-text">
+                    <h1>Mehmonxonamizga xush kelibsiz</h1>
+                    <p>Biz sizga eng yaxshi xizmatlarni taqdim etamiz</p>
+                    <a href="{% url 'rooms_list' %}" class="primary-btn">Xonalarni ko'rish</a>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-5 offset-xl-2 offset-lg-1">
+                <div class="booking-form">
+                    <h3>Xona bandlash</h3>
+                    <form action="{% url 'booking' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="check-date">
+                            <label for="date-in">Kirish sanasi:</label>
+                            <input type="date" class="date-input" id="date-in" name="check_in_date" required>
+                            <i class="icon_calendar"></i>
+                        </div>
+                        <div class="check-date">
+                            <label for="date-out">Chiqish sanasi:</label>
+                            <input type="date" class="date-input" id="date-out" name="check_out_date" required>
+                            <i class="icon_calendar"></i>
+                        </div>
+                        <div class="select-option">
+                            <label for="guest">Mehmonlar:</label>
+                            <select id="guest" name="capacity">
+                                <option value="1">1 kishi</option>
+                                <option value="2">2 kishi</option>
+                                <option value="3">3 kishi</option>
+                                <option value="4">4 kishi</option>
+                            </select>
+                        </div>
+                        <div class="select-option">
+                            <label for="room">Xona turi:</label>
+                            <select id="room" name="room_type">
+                                <option value="ST">Standart</option>
+                                <option value="CF">Komfort</option>
+                                <option value="LX">Lyuks</option>
+                            </select>
+                        </div>
+                        <button type="submit">Mavjudligini tekshirish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-slider owl-carousel">
+        <div class="hs-item set-bg" data-setbg="{% static 'assets_booking/img/hero/hero-1.jpg' %}"></div>
+        <div class="hs-item set-bg" data-setbg="{% static 'assets_booking/img/hero/hero-2.jpg' %}"></div>
+        <div class="hs-item set-bg" data-setbg="{% static 'assets_booking/img/hero/hero-3.jpg' %}"></div>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+<!-- About Us Section Begin -->
+<section class="aboutus-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="about-text">
+                    <div class="section-title">
+                        <span>Biz haqimizda</span>
+                        <h2>Mehmonxonamiz haqida</h2>
+                    </div>
+                    <p>Bizning mehmonxona sizga eng yaxshi xizmatlarni taqdim etadi. Biz mehmonlarimizga qulay va shinam muhitni yaratib beramiz.</p>
+                    <a href="{% url 'about_us' %}" class="primary-btn">Batafsil</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-pic">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <img src="{% static 'assets_booking/img/about/about-1.jpg' %}" alt="">
+                        </div>
+                        <div class="col-sm-6">
+                            <img src="{% static 'assets_booking/img/about/about-2.jpg' %}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Us Section End -->
+
+<!-- Home Room Section Begin -->
+<section class="hp-room-section">
+    <div class="container-fluid">
+        <div class="hp-room-items">
+            <div class="row">
+                {% for room in rooms %}
+                <div class="col-lg-3 col-md-6">
+                    <div class="hp-room-item set-bg" data-setbg="{% static 'assets_booking/img/room/room-b1.jpg' %}">
+                        <div class="hr-text">
+                            <h3>{{ room.get_room_type_display }} xona</h3>
+                            <h2>${{ room.price }}<span>/Kuniga</span></h2>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="r-o">Sig'imi:</td>
+                                        <td>{{ room.capacity }} kishi</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Karavotlar:</td>
+                                        <td>{{ room.beds }} ta</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Qulayliklar:</td>
+                                        <td>
+                                            {% if room.has_wifi %}Wi-Fi, {% endif %}
+                                            {% if room.has_tv %}TV{% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="{% url 'room_details' room.id %}" class="primary-btn">Batafsil</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Home Room Section End -->
+
+<!-- Blog Section Begin -->
+<section class="blog-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Yangiliklar</span>
+                    <h2>Bizning blog</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="blog-item set-bg" data-setbg="{% static 'assets_booking/img/blog/blog-1.jpg' %}">
+                    <div class="bi-text">
+                        <h4><a href="{% url 'blog' %}">Yangi xonalar</a></h4>
+                        <div class="b-time"><i class="icon_clock_alt"></i> 15.04.2024</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="blog-item set-bg" data-setbg="{% static 'assets_booking/img/blog/blog-2.jpg' %}">
+                    <div class="bi-text">
+                        <h4><a href="{% url 'blog' %}">Yangi xizmatlar</a></h4>
+                        <div class="b-time"><i class="icon_clock_alt"></i> 15.04.2024</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="blog-item set-bg" data-setbg="{% static 'assets_booking/img/blog/blog-3.jpg' %}">
+                    <div class="bi-text">
+                        <h4><a href="{% url 'blog' %}">Maxsus takliflar</a></h4>
+                        <div class="b-time"><i class="icon_clock_alt"></i> 15.04.2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Blog Section End -->
+{% endblock %}

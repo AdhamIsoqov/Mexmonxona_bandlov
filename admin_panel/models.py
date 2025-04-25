@@ -92,3 +92,82 @@ class Room(models.Model):
         if Room.objects.filter(room_number=self.room_number).exclude(id=self.id).exists():
             raise ValueError(f"Xona {self.room_number} allaqachon mavjud!")
         super().save(*args, **kwargs)
+
+class Booking(models.Model):
+    room = models.ForeignKey(
+        Room, 
+        on_delete=models.CASCADE,
+        verbose_name="Xona"
+    )
+    guest_name = models.CharField(
+        max_length=100,
+        verbose_name="Mehmon ismi"
+    )
+    guest_email = models.EmailField(
+        verbose_name="Email",
+        blank=True,
+        null=True
+    )
+    guest_phone = models.CharField(
+        max_length=20,
+        verbose_name="Telefon raqami",
+        blank=True,
+        null=True
+    )
+    check_in_date = models.DateField(
+        verbose_name="Kirish sanasi"
+    )
+    check_out_date = models.DateField(
+        verbose_name="Chiqish sanasi"
+    )
+    total_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Umumiy narx"
+    )
+    is_confirmed = models.BooleanField(
+        default=False,
+        verbose_name="Tasdiqlangan"
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Yaratilgan vaqti"
+    )
+
+    class Meta:
+        verbose_name = "Bandlov"
+        verbose_name_plural = "Bandlovlar"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.guest_name} - {self.room.room_number} ({self.check_in_date} - {self.check_out_date})"
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        from datetime import date, timedelta
+
+        # Hozirgidan oldingi kunni tanlashni taqiqlash
+        if self.check_in_date < date.today():
+            raise ValidationError("Siz hozirgidan oldingi kunni tanlashingiz mumkin emas!")
+
+        # Booking muddatini tekshirish (1-7 kun)
+        days = (self.check_out_date - self.check_in_date).days
+        if days < 1:
+            raise ValidationError("Bandlov muddati kamida 1 kun bo'lishi kerak!")
+        if days > 7:
+            raise ValidationError("Bandlov muddati ko'pi bilan 7 kun bo'lishi mumkin!")
+
+        # Xonaning band bo'lmaganligini tekshirish
+        if Booking.objects.filter(
+            room=self.room,
+            check_in_date__lte=self.check_out_date,
+            check_out_date__gte=self.check_in_date,
+            is_confirmed=True
+        ).exclude(id=self.id).exists():
+            raise ValidationError("Bu xona tanlangan vaqtda band!")
+
+    def save(self, *args, **kwargs):
+        # Umumiy narxni hisoblash
+        days = (self.check_out_date - self.check_in_date).days
+        self.total_price = self.room.price * days
+        super().save(*args, **kwargs)

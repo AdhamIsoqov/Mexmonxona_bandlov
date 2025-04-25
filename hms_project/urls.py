@@ -22,4 +22,5 @@ from admin_panel import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('panel/', include('admin_panel.urls')),
+    path('', include('booking.urls')),
 ]

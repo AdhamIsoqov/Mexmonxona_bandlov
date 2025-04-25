@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Contact Section Begin -->
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="contact-text">
+                    <h2>Aloqa ma'lumotlari</h2>
+                    <p>Bizning mehmonxona bilan bog'lanish uchun quyidagi ma'lumotlardan foydalaning.</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="c-o">Manzil:</td>
+                                <td>Toshkent shahri, Chilonzor tumani, 19-mavze</td>
+                            </tr>
+                            <tr>
+                                <td class="c-o">Telefon:</td>
+                                <td>(998) 71 123-45-67</td>
+                            </tr>
+                            <tr>
+                                <td class="c-o">Email:</td>
+                                <td>info@hotel.uz</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-7 offset-lg-1">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <form action="{% url 'contact' %}" class="contact-form" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {{ form.name }}
+                        </div>
+                        <div class="col-lg-6">
+                            {{ form.email }}
+                        </div>
+                        <div class="col-lg-12">
+                            {{ form.subject }}
+                        </div>
+                        <div class="col-lg-12">
+                            {{ form.message }}
+                            <button type="submit">Xabar yuborish</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="map">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.6977445974257!2d69.27741661541321!3d41.32845997927055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b534175ed31%3A0x52a8f9d9414a2ad8!2z0KfQuNC70L7QvdC30L7RgCwg0KLQsNGI0LrQtdC90YIsIFV6YmVraXN0YW4!5e0!3m2!1sen!2s!4v1625147433096!5m2!1sen!2s"
+                height="470" style="border:0;" allowfullscreen=""></iframe>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+{% endblock %}
