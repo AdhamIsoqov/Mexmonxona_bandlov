@@ -13,42 +13,6 @@
                     <a href="{% url 'rooms_list' %}" class="primary-btn">Xonalarni ko'rish</a>
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-5 offset-xl-2 offset-lg-1">
-                <div class="booking-form">
-                    <h3>Xona bandlash</h3>
-                    <form action="{% url 'booking' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="check-date">
-                            <label for="date-in">Kirish sanasi:</label>
-                            <input type="date" class="date-input" id="date-in" name="check_in_date" required>
-                            <i class="icon_calendar"></i>
-                        </div>
-                        <div class="check-date">
-                            <label for="date-out">Chiqish sanasi:</label>
-                            <input type="date" class="date-input" id="date-out" name="check_out_date" required>
-                            <i class="icon_calendar"></i>
-                        </div>
-                        <div class="select-option">
-                            <label for="guest">Mehmonlar:</label>
-                            <select id="guest" name="capacity">
-                                <option value="1">1 kishi</option>
-                                <option value="2">2 kishi</option>
-                                <option value="3">3 kishi</option>
-                                <option value="4">4 kishi</option>
-                            </select>
-                        </div>
-                        <div class="select-option">
-                            <label for="room">Xona turi:</label>
-                            <select id="room" name="room_type">
-                                <option value="ST">Standart</option>
-                                <option value="CF">Komfort</option>
-                                <option value="LX">Lyuks</option>
-                            </select>
-                        </div>
-                        <button type="submit">Mavjudligini tekshirish</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
     <div class="hero-slider owl-carousel">

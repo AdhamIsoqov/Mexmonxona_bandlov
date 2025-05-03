@@ -31,6 +31,18 @@ def blog_details(request):
 
 def room_details(request, room_id):
     room = get_object_or_404(Room, id=room_id)
+    today = date.today()
+    active_booking = Booking.objects.filter(
+        room=room,
+        check_in_date__lte=today,
+        check_out_date__gte=today,
+        is_confirmed=True
+    ).first()
+    next_booking = Booking.objects.filter(
+        room=room,
+        check_in_date__gt=today,
+        is_confirmed=True
+    ).order_by('check_in_date').first()
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
@@ -38,13 +50,17 @@ def room_details(request, room_id):
             booking.room = room
             booking.total_price = room.price * (booking.check_out_date - booking.check_in_date).days
             booking.save()
-            messages.success(request, "Bandlov muvaffaqiyatli amalga oshirildi!")
+            room.is_available = False
+            room.save()
+            messages.success(request, f"Xona {room.room_number} {booking.check_in_date} dan {booking.check_out_date} gacha muvaffaqiyatli band qilindi!")
             return redirect('room_details', room_id=room.id)
     else:
         form = BookingForm(initial={'room': room})
     return render(request, 'room_details.html', {
         'room': room,
-        'form': form
+        'form': form,
+        'active_booking': active_booking,
+        'next_booking': next_booking,
     })
 
 def booking(request):
