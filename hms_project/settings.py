@@ -128,3 +128,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Click to'lov tizimi sozlamalari
+CLICK_SERVICE_ID = 'your_service_id'
+CLICK_MERCHANT_ID = 'your_merchant_id'
+CLICK_SECRET_KEY = 'your_secret_key'

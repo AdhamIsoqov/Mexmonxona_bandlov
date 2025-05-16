@@ -122,6 +122,9 @@
                         </div>
                         <button type="submit">Bandlash</button>
                     </form>
+                    {% if unpaid_invoice %}
+                      <a href="{% url 'click_payment' booking_id=unpaid_invoice.booking.id %}" class="primary-btn mt-2">To‘lovni davom ettirish</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

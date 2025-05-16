@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from admin_panel.models import Invoice
+from datetime import date, timedelta
 
 # Create your views here.
 def login_view(request):
@@ -363,3 +365,22 @@ def get_rooms(request):
         return JsonResponse({
             'error': f'Xatolik yuz berdi: {str(e)}'
         }, status=500)
+
+@login_required(login_url='login')
+def invoices_list(request):
+    period = request.GET.get('period', '')
+    invoices = Invoice.objects.all()
+    today = date.today()
+    if period == 'daily':
+        invoices = invoices.filter(created_at__date=today)
+    elif period == 'weekly':
+        week_ago = today - timedelta(days=7)
+        invoices = invoices.filter(created_at__date__gte=week_ago)
+    elif period == 'monthly':
+        month_start = today.replace(day=1)
+        invoices = invoices.filter(created_at__date__gte=month_start)
+    invoices = invoices.order_by('-created_at')
+    return render(request, 'admin_panel/invoices_list.html', {
+        'invoices': invoices,
+        'period': period,
+    })

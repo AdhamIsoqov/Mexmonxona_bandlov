@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+import uuid
 
 # Create your models here.
 # Xona modeli
@@ -171,3 +172,36 @@ class Booking(models.Model):
         days = (self.check_out_date - self.check_in_date).days
         self.total_price = self.room.price * days
         super().save(*args, **kwargs)
+
+# Kvitansiya (Invoice) modeli
+class Invoice(models.Model):
+    booking = models.OneToOneField('Booking', on_delete=models.CASCADE, verbose_name="Booking")
+    invoice_number = models.CharField(max_length=36, default=uuid.uuid4, editable=False, verbose_name="Invoice Number")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Amount")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    paid = models.BooleanField(default=False, verbose_name="Paid")
+    pdf = models.FileField(upload_to='invoices/', blank=True, null=True, verbose_name="Invoice PDF")
+
+    class Meta:
+        verbose_name = "Invoice"
+        verbose_name_plural = "Invoices"
+
+    def __str__(self):
+        return f"Invoice #{self.invoice_number} ({self.booking})"
+
+    def generate_pdf(self):
+        from reportlab.pdfgen import canvas
+        from io import BytesIO
+        from django.core.files.base import ContentFile
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer)
+        p.drawString(50, 800, f"Invoice #{self.invoice_number}")
+        p.drawString(50, 780, f"Booking ID: {self.booking.id}")
+        p.drawString(50, 760, f"Room: {self.booking.room.room_number}")
+        p.drawString(50, 740, f"Amount: {self.amount}")
+        p.drawString(50, 720, f"Date: {self.created_at.strftime('%Y-%m-%d')}")
+        p.showPage()
+        p.save()
+        buffer.seek(0)
+        self.pdf.save(f"invoice_{self.invoice_number}.pdf", ContentFile(buffer.read()))
+        buffer.close()

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Click to‘lov</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ click_url }}" method="post">
+                        <input type="hidden" name="merchant_id" value="{{ merchant_id }}">
+                        <input type="hidden" name="service_id" value="{{ service_id }}">
+                        <input type="hidden" name="amount" value="{{ amount }}">
+                        <input type="hidden" name="trans_id" value="{{ trans_id }}">
+                        <input type="hidden" name="return_url" value="{{ return_url }}">
+                        <input type="hidden" name="callback_url" value="{{ callback_url }}">
+                        <button type="submit" class="btn btn-primary w-100">To‘lovni amalga oshirish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

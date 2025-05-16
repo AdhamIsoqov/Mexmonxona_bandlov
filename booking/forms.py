@@ -1,10 +1,11 @@
 from django import forms
-from admin_panel.models import Booking
+from admin_panel.models import Booking as _Booking
+from datetime import date as _date
 from .models import Contact, Subscriber
 
 class BookingForm(forms.ModelForm):
     class Meta:
-        model = Booking
+        model = _Booking
         fields = ['room', 'guest_name', 'guest_email', 'guest_phone', 'check_in_date', 'check_out_date']
         widgets = {
             'check_in_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
@@ -21,12 +22,26 @@ class BookingForm(forms.ModelForm):
         check_out_date = cleaned_data.get('check_out_date')
         room = cleaned_data.get('room')
 
+        # Sana tekshirish: bugungi kundan oldin bo'lmasligi va 1-7 kun oralig'ida bo'lishi
         if check_in_date and check_out_date:
+            if check_in_date < _date.today():
+                raise forms.ValidationError("Kirish sanasi bugungi kundan oldin bo'lmasligi kerak!")
             if check_in_date >= check_out_date:
                 raise forms.ValidationError("Chiqish sanasi kirish sanasidan katta bo'lishi kerak!")
+            days = (check_out_date - check_in_date).days
+            if days < 1 or days > 7:
+                raise forms.ValidationError("Bandlov muddati 1 dan 7 kungacha bo'lishi kerak!")
 
-        if room and not room.is_available:
-            raise forms.ValidationError("Bu xona hozircha band!")
+        # Band bo'lgan sanalar va qo'shni kunlarni tekshirish
+        if room and check_in_date and check_out_date:
+            exists = _Booking.objects.filter(
+                room=room,
+                check_in_date__lte=check_out_date,
+                check_out_date__gte=check_in_date,
+                is_confirmed=True
+            ).exclude(id=getattr(self.instance, 'id', None)).exists()
+            if exists:
+                raise forms.ValidationError("Tanlangan sanalar oralig'ida yoki unga qo'shni kunlarda xona band!")
 
         return cleaned_data
 
